@@ -35,7 +35,7 @@ const salesSchema = new mongoose.Schema({
 
                 return v <= inventary; 
             },
-            message: props => `${props.value} no es valido para hacer la factura no hay inventario`,
+            message: props => `${props.value} no es valido para hacer la factura no hay productos cargados en el Modulo de Inventarios`,
         }
     },
     Precio:Number,
@@ -117,14 +117,14 @@ db.once('open', async () => {
     console.log('--------------Inicio de regsitro de Venta----------------');
     //try {
         await Venta.createInstance(
-            '005-000030',     // Id_Factura
+            '001-000001',     // Id_Factura
             '10/02/2025',     // Fecha
             '1',              // Id_Cliente
-            'YK-01',           // Id_Vendedor
+            'YK-01',          // Id_Vendedor
             '001-000001',     // Id_Producto
             '000001',         // Lote
             true,             // exceptoIVA
-            10,'001-000001',                // Cantidad
+            10,               // Cantidad
             32.54,            // Precio
             'BS',             // Moneda
         );
@@ -135,7 +135,7 @@ db.once('open', async () => {
     //};
 
     // Metodo correcto para cerrar la conexion de la base de datos
-    //mongoose.connection.close();
+    mongoose.connection.close();
 });
 
 module.exports = Venta;

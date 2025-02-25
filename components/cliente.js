@@ -67,7 +67,7 @@ const Cliente = mongoose.model('Cliente', clientSchema);
 
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
-    console.log('--------------Inicio de regsitro de clientes----------------');
+    console.log('--------------Inicio de regsitro de cliente 1----------------');
     try {
         await Cliente.createInstance(
             '1',                    // Id_Cliente 

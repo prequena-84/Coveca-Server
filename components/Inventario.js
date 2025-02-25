@@ -56,6 +56,7 @@ inventorySchema.statics.findInventoryDate = async function(fechaVencimiento) {
 inventorySchema.statics.createInstance = async function(
     Id_Lote,           // Campo único
     IdProducto,
+    IdVendedor,
     fechaElaboracion,
     fechaVencimiento,
     stock,
@@ -65,6 +66,7 @@ inventorySchema.statics.createInstance = async function(
             newInventory = new this({
             Id_Lote,           
             IdProducto,
+            IdVendedor,
             fechaElaboracion,
             fechaVencimiento,
             stock,
@@ -86,42 +88,59 @@ const Inventario = mongoose.model ('Inventario', inventorySchema);
 
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
-    console.log('--------------Inicio de registro de inventario----------------');
+    /* console.log('--------------Inicio de registro de inventario----------------');
     try {
-        /*await Inventario.createInstance(
+        await Inventario.createInstance(
             '000001',     // Id_Lote       
             '001-000001', // Id_Productos
+            'YK-01',      // Id_Vendedor
             '01/02/2025', // fechaElaboracion
             '01/06/2025', // fechaVencimiento
             150,          // stock
         );
-
-        await Inventario.createInstance(
-            '000002',     // Id_Lote       
-            '002-000001', // Id_Productos
-            '01/04/2025', // fechaElaboracion
-            '01/08/2025', // fechaVencimiento
-            50,           // stock
-        );
-
-        await Inventario.createInstance(
-            '000003',     // Id_Lote       
-            '001-000001', // Id_Productos
-            '01/07/2025', // fechaElaboracion
-            '01/12/2025', // fechaVencimiento
-            75,           // stock
-        );*/
 
         console.log('--------------Registro de inventario ok------------------------');
     } catch(err) {
        console.log('error venta', err);
     };
 
-    const totalInventario = await Inventario.allInventory();
-    console.log(totalInventario);
+    console.log('--------------Inicio de registro de inventario ----------------');
+    try {
+        await Inventario.createInstance(
+            '000002',     // Id_Lote       
+            '002-000001', // Id_Productos
+            'YG-01',      // Id_Vendedor
+            '01/04/2025', // fechaElaboracion
+            '01/08/2025', // fechaVencimiento
+            50,           // stock
+        );
+
+        console.log('--------------Registro de inventario ok 2------------------------');
+    } catch(err) {
+       console.log('error venta', err);
+    };*/
+
+    /*console.log('--------------Inicio de registro de inventario 3----------------');
+    try {
+        await Inventario.createInstance(
+            '000003',     // Id_Lote       
+            '001-000001', // Id_Productos
+            'PR-01',      // Id_Vendedor
+            '01/07/2025', // fechaElaboracion
+            '01/12/2025', // fechaVencimiento
+            75,           // stock
+        );
+
+        console.log('--------------Registro de inventario ok 3------------------------');
+    } catch(err) {
+       console.log('error venta', err);
+    };*/
+
+    /*const totalInventario = await Inventario.allInventory();
+    console.log(totalInventario);*/
 
     // Metodo correcto para cerrar la conexion de la base de datos
-    //mongoose.connection.close();
+    mongoose.connection.close();
 });
 
 module.exports = Inventario;

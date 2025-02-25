@@ -1,5 +1,23 @@
 {
+  "name": "coveca-server",
+  "version": "1.0.0",
+  "description": "Desarrollo de API Operaciones COVECA",
+  "main": "App.js",
+  "scripts": {
+    "test": "Jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prequena-84/Coveca-Server.git"
+  },
+  "author": "Pedro Requena Rondon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prequena-84/Coveca-Server/issues"
+  },
+  "homepage": "https://github.com/prequena-84/Coveca-Server#readme",
   "dependencies": {
-    "mongoose": "^8.10.0"
+    "coveca-server": "file:",
+    "mongoose": "^8.10.2"
   }
 }
