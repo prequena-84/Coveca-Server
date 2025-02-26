@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/prequena-84/Coveca-Server#readme",
   "dependencies": {
+    "@types/mongoose": "^5.11.97",
     "coveca-server": "file:",
-    "mongoose": "^8.10.2"
+    "mongoose": "^8.10.2",
+    "typescript": "^5.7.3"
   }
 }

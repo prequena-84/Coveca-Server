@@ -1,4 +1,4 @@
-const Ventas = require('./venta.js');
+const Ventas = require('../mongoDB-query/venta');
 const mongoose = require('mongoose');
 const uri = 'mongodb+srv://prequena:52ohHwBT7MaMy9p9@db-operaciones.ktjoy.mongodb.net/?retryWrites=true&w=majority&appName=DB-Operaciones';
 
