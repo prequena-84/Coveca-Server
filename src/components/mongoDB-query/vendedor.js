@@ -20,20 +20,20 @@ const sellerSchema = new mongoose.Schema({
 });
 
 // Mostrar todos los clientes sin filtros
-sellerSchema.statics.allSeller = async function() {
-    return await this.find();
+sellerSchema.statics.allSeller = function() {
+    return this.find();
 };
 
 // Ejemplo de filtro de Clientes por Numero
-sellerSchema.statics.findSellerName = async function(nombre) {
-    return await this.find({
+sellerSchema.statics.findSellerName = function(nombre) {
+    return this.find({
         nombre:new RegExp(`^${ nombre.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&') }`)
     });
 };
 
 // Ejemplo de filtro de Vendedor por numero de ID
-sellerSchema.statics.findSellerCode = async function(id) {
-    return await this.find({
+sellerSchema.statics.findSellerCode = function(id) {
+    return this.find({
         Id_Vendedor:new RegExp(`^${ id.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&') }`)
     });
 };

@@ -1,4 +1,4 @@
-const Inventario = require('./Inventario');
+const Inventario = require('./inventario');
 const Producto = require('./producto');
 const { validateQuantity } = require('../../../dist/function/FN-ventas.js');
 const mongoose = require('mongoose');
@@ -58,8 +58,8 @@ salesSchema.statics.allInvoices = function() {
 };
 
 // Filtro de Facturas por numero de vendedor
-salesSchema.statics.findInvoicesIdseller = async function(id) {
-    return await this.find({
+salesSchema.statics.findInvoicesIdseller = function(id) {
+    return this.find({
         IdVendedor:new RegExp(`^${ id.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&') }`)
     });
 };
@@ -76,25 +76,25 @@ salesSchema.statics.createInstance = async function(
     Cantidad,
     Precio,
 ) {
-    const newSale = new this({
-        Id_Factura,
-        Fecha,
-        IdCliente,
-        IdVendedor,
-        IdProducto,
-        IdLote,
-        exceptoIVA,
-        Cantidad,
-        Precio,
-    });
-
-    const monedaProducto = await Producto.findProductMoney(IdProducto);
+    const 
+        newSale = new this({
+            Id_Factura,
+            Fecha,
+            IdCliente,
+            IdVendedor,
+            IdProducto,
+            IdLote,
+            exceptoIVA,
+            Cantidad,
+            Precio,
+        }),
+        monedaProducto = await Producto.findProductMoney(IdProducto)
+    ;
 
     newSale.Moneda = monedaProducto.moneda;
     newSale.SubTotal = newSale.CalculoSubTotal();
     newSale.IVA = newSale.TotalIva();
     newSale.Total = newSale.CalculoTotal();
-
     return newSale.save();
 };
 
@@ -107,12 +107,12 @@ db.once('open', async () => {
     console.log('--------------Inicio de regsitro de Venta----------------');
     try {
         await Venta.createInstance(
-            '001-000001',     // Id_Factura 
-            '31/01/2025',     // Fecha
+            '001-000002',     // Id_Factura 
+            '28/02/2025',     // Fecha
             '1',              // Id_Cliente
-            'YZ-01',          // Id_Vendedor
-            '001-000001',     // Id_Producto
-            '000001',         // Lote
+            'PR-01',          // Id_Vendedor
+            '002-000001',     // Id_Producto
+            '000002',         // Lote
             true,             // exceptoIVA
             20,               // Cantidad
             30.20,            // Precio
@@ -122,7 +122,7 @@ db.once('open', async () => {
         console.error('error #1', err);
     };
 
-    console.log('--------------Inicio de regsitro de Venta #2----------------');
+    /*console.log('--------------Inicio de regsitro de Venta #2----------------');
     try {
         await Venta.createInstance(
             '001-000002',     // Id_Factura 
@@ -138,7 +138,7 @@ db.once('open', async () => {
         console.log('--------------Registro de Venta ok------------------------');
     } catch(err) {
         console.error('error #2', err);
-    };
+    };*/
 
     // Metodo correcto para cerrar la conexion de la base de datos
     await mongoose.connection.close();

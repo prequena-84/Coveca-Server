@@ -7,4 +7,3 @@ function validateQuantity(inventario) {
     }, 0);
     return totalInventario;
 }
-;

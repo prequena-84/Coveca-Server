@@ -6,7 +6,7 @@ function validateQuantity( inventario:IProduct[] ): number {
     }, 0);
 
     return totalInventario;
-};
+}
 
 export {
     validateQuantity,
