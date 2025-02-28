@@ -23,18 +23,24 @@ productSchema.statics.allProduct = async function() {
 };
 
 // Ejemplo de filtro de Clientes por Numero
-productSchema.statics.findSProductName = async function(nombre) {
+productSchema.statics.findProductName = async function(nombre) {
     return await this.find({
-        nombre:new RegExp(`^${ nombre.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&') }`)
+        nombre:new RegExp(`^${ nombre.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&') }`),
     });
 };
 
 // Ejemplo de filtro de Vendedor por numero de ID
 productSchema.statics.findProductCode = async function(id) {
     return await this.find({
-        Id_Producto:new RegExp(`^${ id.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&') }`)
+        Id_Producto:new RegExp(`^${ id.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&') }`),
     });
 };
+
+productSchema.statics.findProductMoney = function(id) {
+    return this.findOne({
+        Id_Producto:id,
+    });
+}
 
 productSchema.statics.createInstance = async function(Id_Producto, Articulo, unidadMedida, precio, moneda) {
     try {

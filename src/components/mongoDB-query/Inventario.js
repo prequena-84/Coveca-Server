@@ -36,7 +36,7 @@ inventorySchema.statics.quantityProduct = function(id) {
     return this.find({
         IdProducto:id,
     });
-}
+};
 
 // Filtro de Facturas por numero de vendedor
 inventorySchema.statics.findInventoryIdProduct = async function(id) {

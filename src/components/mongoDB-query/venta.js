@@ -1,6 +1,6 @@
-const Inventario = require('./Inventario.js');
+const Inventario = require('./Inventario');
+const Producto = require('./producto');
 const { validateQuantity } = require('../../../dist/function/FN-ventas.js');
-
 const mongoose = require('mongoose');
 const uri = 'mongodb+srv://prequena:52ohHwBT7MaMy9p9@db-operaciones.ktjoy.mongodb.net/?retryWrites=true&w=majority&appName=DB-Operaciones';
 
@@ -9,7 +9,7 @@ mongoose.connect(uri);
 const db = mongoose.connection;
 
 //Asociar un error a la conexion
-db.on('error', console.error.bind(console, '  error:'));
+db.on('error', err => console.log(err));
 
 // Esquema Venta
 const salesSchema = new mongoose.Schema({
@@ -25,17 +25,9 @@ const salesSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator:async function(v) { 
-
-                console.log('Revision id producto', this.IdProducto)
-
-                const inventary = validateQuantity( await Inventario.quantityProduct(this.IdProducto) );
-
-                console.log('revision de la validacion intentario', inventary);
-                console.log('revision de la validacion', v);
-
-                return v > 0; 
+                return v <= validateQuantity( await Inventario.quantityProduct(this.IdProducto) );
             },
-            message: props => `${props.value} no es valido para hacer la factura no hay productos cargados en el Modulo de Inventarios`,
+            message: props => `La cantidad ingresada de ${props.value} no es valida para hacer la factura porque no hay esta cantidad de productos en el inventario`,
         }
     },
     Precio:Number,
@@ -73,7 +65,7 @@ salesSchema.statics.findInvoicesIdseller = async function(id) {
 };
 
 // Instancia para el registro de nuevas facturas
-salesSchema.statics.createInstance = function(
+salesSchema.statics.createInstance = async function(
     Id_Factura,
     Fecha,
     IdCliente,
@@ -83,7 +75,6 @@ salesSchema.statics.createInstance = function(
     exceptoIVA,
     Cantidad,
     Precio,
-    Moneda,
 ) {
     const newSale = new this({
         Id_Factura,
@@ -95,12 +86,11 @@ salesSchema.statics.createInstance = function(
         exceptoIVA,
         Cantidad,
         Precio,
-        Moneda,
     });
 
-    /*const cantidad = await Inventario.quantityProduct(IdProducto);
-    console.log(cantidad.stock);*/
+    const monedaProducto = await Producto.findProductMoney(IdProducto);
 
+    newSale.Moneda = monedaProducto.moneda;
     newSale.SubTotal = newSale.CalculoSubTotal();
     newSale.IVA = newSale.TotalIva();
     newSale.Total = newSale.CalculoTotal();
@@ -111,45 +101,47 @@ salesSchema.statics.createInstance = function(
 // Asociacion del modelo de Venta
 const Venta = mongoose.model ('Venta', salesSchema);
 
-// Quede en incluir en las Venta el lote del inventario 
-
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
+
     console.log('--------------Inicio de regsitro de Venta----------------');
-    //try {
+    try {
         await Venta.createInstance(
             '001-000001',     // Id_Factura 
-            '10/02/2025',     // Fecha
+            '31/01/2025',     // Fecha
             '1',              // Id_Cliente
-            'YK-01',          // Id_Vendedor
+            'YZ-01',          // Id_Vendedor
             '001-000001',     // Id_Producto
             '000001',         // Lote
             true,             // exceptoIVA
-            15,               // Cantidad
+            20,               // Cantidad
             30.20,            // Precio
-            //'BS',            // Moneda
         );
+        console.log('--------------Registro de Venta ok------------------------');
+    } catch(err) {
+        console.error('error #1', err);
+    };
 
-        /*await Venta.createInstance(
+    console.log('--------------Inicio de regsitro de Venta #2----------------');
+    try {
+        await Venta.createInstance(
             '001-000002',     // Id_Factura 
-            '10/02/2025',     // Fecha
+            '28/02/2025',     // Fecha
             '1',              // Id_Cliente
-            'PR-01',          // Id_Vendedor
+            'YZ-01',          // Id_Vendedor
             '002-000001',     // Id_Producto
-            '000001',         // Lote
-            false,            // exceptoIVA
-            15,               // Cantidad
+            '000002',         // Lote
+            true,             // exceptoIVA
+            20,               // Cantidad
             30.20,            // Precio
-            'USD',            // Moneda
-        );*/
-
-        //console.log('--------------Registro de Venta ok------------------------');
-    //} catch(err) {
-        //console.log('error venta', err);
-    //};
+        );
+        console.log('--------------Registro de Venta ok------------------------');
+    } catch(err) {
+        console.error('error #2', err);
+    };
 
     // Metodo correcto para cerrar la conexion de la base de datos
-    mongoose.connection.close();
+    await mongoose.connection.close();
 });
 
 module.exports = Venta;
