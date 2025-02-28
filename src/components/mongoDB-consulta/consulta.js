@@ -12,10 +12,10 @@ db.once('open', async () => {
     await Ventas.aggregate([
         {
             $lookup: {
-              from: "clientes",         // Tabla a unificar
-              localField: "Id_Cliente", // Campo de ID colección de ventas
-              foreignField: "id",       // Campo de ID colección de clientes
-              as: "cliente"             // Nombre del campo donde se guardará la información combinada
+              from: "clientes",           // Tabla a unificar
+              localField: "IdCliente",    // Campo de ID colección de ventas
+              foreignField: "Id_Cliente", // Campo de ID colección de clientes
+              as: "cliente"               // Nombre del campo donde se guardará la información combinada
             }
           },
           {
@@ -24,8 +24,8 @@ db.once('open', async () => {
           {
             $lookup: {
               from: "vendedores",
-              localField: "Id_Vendedor",
-              foreignField: "id",
+              localField: "IdVendedor",
+              foreignField: "Id_Vendedor",
               as: "vendedor"
             }
           },
