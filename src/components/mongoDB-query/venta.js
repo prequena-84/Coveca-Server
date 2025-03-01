@@ -9,7 +9,7 @@ mongoose.connect(uri);
 const db = mongoose.connection;
 
 //Asociar un error a la conexion
-db.on('error', err => console.log(err));
+db.on('error', () => {} );
 
 // Esquema Venta
 const salesSchema = new mongoose.Schema({
@@ -74,7 +74,6 @@ salesSchema.statics.createInstance = async function(
     IdLote,
     exceptoIVA,
     Cantidad,
-    Precio,
 ) {
     const 
         newSale = new this({
@@ -86,12 +85,12 @@ salesSchema.statics.createInstance = async function(
             IdLote,
             exceptoIVA,
             Cantidad,
-            Precio,
         }),
-        monedaProducto = await Producto.findProductMoney(IdProducto)
+        itemsProducto = await Producto.findProductCode(IdProducto)
     ;
 
-    newSale.Moneda = monedaProducto.moneda;
+    newSale.Precio = itemsProducto.precio;
+    newSale.Moneda = itemsProducto.moneda;
     newSale.SubTotal = newSale.CalculoSubTotal();
     newSale.IVA = newSale.TotalIva();
     newSale.Total = newSale.CalculoTotal();
@@ -104,41 +103,23 @@ const Venta = mongoose.model ('Venta', salesSchema);
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
 
-    console.log('--------------Inicio de regsitro de Venta----------------');
+    console.log('--------------Inicio de regsitro de Venta #1----------------');
     try {
         await Venta.createInstance(
-            '001-000002',     // Id_Factura 
-            '28/02/2025',     // Fecha
+            '001-000001',     // Id_Factura 
+            '31/12/2024',     // Fecha
             '1',              // Id_Cliente
             'PR-01',          // Id_Vendedor
-            '002-000001',     // Id_Producto
-            '000002',         // Lote
+            '001-000001',     // Id_Producto
+            '000001',         // Lote
             true,             // exceptoIVA
-            20,               // Cantidad
-            30.20,            // Precio
+            15,               // Cantidad
         );
         console.log('--------------Registro de Venta ok------------------------');
     } catch(err) {
-        console.error('error #1', err);
+        /*console.log('--------------Error en el registro de Venta 1----------------');
+        console.log(err);*/
     };
-
-    /*console.log('--------------Inicio de regsitro de Venta #2----------------');
-    try {
-        await Venta.createInstance(
-            '001-000002',     // Id_Factura 
-            '28/02/2025',     // Fecha
-            '1',              // Id_Cliente
-            'YZ-01',          // Id_Vendedor
-            '002-000001',     // Id_Producto
-            '000002',         // Lote
-            true,             // exceptoIVA
-            20,               // Cantidad
-            30.20,            // Precio
-        );
-        console.log('--------------Registro de Venta ok------------------------');
-    } catch(err) {
-        console.error('error #2', err);
-    };*/
 
     // Metodo correcto para cerrar la conexion de la base de datos
     await mongoose.connection.close();

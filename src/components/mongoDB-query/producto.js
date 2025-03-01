@@ -17,6 +17,51 @@ const productSchema = new mongoose.Schema({
     moneda:{ type: String, default: 'Bs' },
 });
 
+/*
+    Quede en hacer un metodo para actualizar del producto asi para cambiar el precio, nombre, cantidad, moneda, etc, etc.
+    luego de esto crear un metodo para modificar el inventario por si hay un error en el registro del inventario y evitar de volver a
+    cargar los datos.
+ */
+
+/**
+ * Ejemplo:
+ * 
+ * ventaSchema.statics.actualizarVenta = async function(id, datosActualizados) {
+    try {
+        const resultado = await this.findByIdAndUpdate(id, datosActualizados, { new: true });
+        return resultado; // Retorna el documento actualizado
+    } catch (error) {
+        throw new Error('Error al actualizar la venta: ' + error.message);
+    }
+   };
+
+   // Ejemplo aplicado
+   const Ventas = require('../mongoDB-query/venta'); // Asegúrate de que la ruta sea correcta
+
+        async function actualizarDatosVenta(id, nuevosDatos) {
+            try {
+                const ventaActualizada = await Ventas.actualizarVenta(id, nuevosDatos);
+                console.log('Venta actualizada:', ventaActualizada);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+    // Llama a la función con el ID de la venta y los nuevos datos
+    actualizarDatosVenta('ID_DE_LA_VENTA', { IdCliente: 'nuevoIdCliente', IdVendedor: 'nuevoIdVendedor' }); 
+ * 
+ * este es el metodo "findByIdAndUpdate"
+ */
+// Metodo para actualizar los datos,
+productSchema.statics.actualizarProdcuto = function() {
+    try {
+
+
+    } catch(err) {
+        console.log('error:', err);
+    };
+};
+
 // Mostrar todos los clientes sin filtros
 productSchema.statics.allProduct = async function() {
     return await this.find();
@@ -29,14 +74,7 @@ productSchema.statics.findProductName = async function(nombre) {
     });
 };
 
-// Ejemplo de filtro de Vendedor por numero de ID
-productSchema.statics.findProductCode = async function(id) {
-    return await this.find({
-        Id_Producto:new RegExp(`^${ id.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&') }`),
-    });
-};
-
-productSchema.statics.findProductMoney = function(id) {
+productSchema.statics.findProductCode = function(id) {
     return this.findOne({
         Id_Producto:id,
     });

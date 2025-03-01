@@ -69,7 +69,7 @@ inventorySchema.statics.createInstance = async function(
                 fechaElaboracion,
                 fechaVencimiento,
                 stock,
-            },)
+            }),
             itemProduct = await Productos.findOne({ Id_Producto:IdProducto })
         ;
 
@@ -85,41 +85,10 @@ inventorySchema.statics.createInstance = async function(
 // Asociacion del modelo de ventas
 const Inventario = mongoose.model ('Inventario', inventorySchema);
 
-// abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
+// abrir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
-    //console.log('--------------Inicio de registro de inventario----------------');
-    try {
-        await Inventario.createInstance(
-            '000001',     // Id_Lote       
-            '001-000001', // Id_Productos
-            'YK-01',      // Id_Vendedor
-            '01/02/2025', // fechaElaboracion
-            '01/06/2025', // fechaVencimiento
-            150,          // stock
-        );
-
-        //console.log('--------------Registro de inventario ok------------------------');
-    } catch(err) {
-       //console.log('error venta', err);
-    };
-
-    //console.log('--------------Inicio de registro de inventario ----------------');
-    try {
-        await Inventario.createInstance(
-            '000002',     // Id_Lote       
-            '002-000001', // Id_Productos
-            'YG-01',      // Id_Vendedor
-            '01/04/2025', // fechaElaboracion
-            '01/08/2025', // fechaVencimiento
-            50,           // stock
-        );
-
-        //console.log('--------------Registro de inventario ok 2------------------------');
-    } catch(err) {
-       //console.log('error venta', err);
-    };
-
-    //console.log('--------------Inicio de registro de inventario 3----------------');
+   
+    console.log('--------------Inicio de registro de inventario 3----------------');
     try {
         await Inventario.createInstance(
             '000003',     // Id_Lote       
@@ -132,7 +101,7 @@ db.once('open', async () => {
 
         //console.log('--------------Registro de inventario ok 3------------------------');
     } catch(err) {
-       //console.log('error venta', err);
+       //console.log('error inventario 3', err);
     };
 
     //const inventario = await Inventario.quantityProduct('002-000001');
