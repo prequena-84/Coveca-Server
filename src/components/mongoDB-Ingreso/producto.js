@@ -1,15 +1,14 @@
+require('dotenv').config({ path: '../../.env' }); // Ajusta la ruta según la ubicación de tu .env
 const mongoose = require('mongoose');
-const uri = 'mongodb+srv://prequena:52ohHwBT7MaMy9p9@db-operaciones.ktjoy.mongodb.net/?retryWrites=true&w=majority&appName=DB-Operaciones';
-
-mongoose.connect(uri);
-
+mongoose.connect(process.env.DB_URI_MONGO);
 const db = mongoose.connection;
+const { Schema } = mongoose;
 
 //Asociar un error a la conexion
 db.on('error', console.error.bind(console, '  error:'));
 
 // Sintasix que crea la clase Schema ya que en mongoose todo modelo deriba de una clase schema
-const productSchema = new mongoose.Schema({
+const productSchema = new Schema({
     Id_Producto:{ type: String, unique: true, required: true }, // Campo único
     Articulo:String,
     unidadMedida:String,
@@ -23,40 +22,16 @@ const productSchema = new mongoose.Schema({
     cargar los datos.
  */
 
-/**
- * Ejemplo:
- * 
- * ventaSchema.statics.actualizarVenta = async function(id, datosActualizados) {
-    try {
-        const resultado = await this.findByIdAndUpdate(id, datosActualizados, { new: true });
-        return resultado; // Retorna el documento actualizado
-    } catch (error) {
-        throw new Error('Error al actualizar la venta: ' + error.message);
-    }
-   };
-
-   // Ejemplo aplicado
-   const Ventas = require('../mongoDB-query/venta'); // Asegúrate de que la ruta sea correcta
-
-        async function actualizarDatosVenta(id, nuevosDatos) {
-            try {
-                const ventaActualizada = await Ventas.actualizarVenta(id, nuevosDatos);
-                console.log('Venta actualizada:', ventaActualizada);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-    // Llama a la función con el ID de la venta y los nuevos datos
-    actualizarDatosVenta('ID_DE_LA_VENTA', { IdCliente: 'nuevoIdCliente', IdVendedor: 'nuevoIdVendedor' }); 
- * 
- * este es el metodo "findByIdAndUpdate"
- */
 // Metodo para actualizar los datos,
-productSchema.statics.actualizarProdcuto = function() {
+productSchema.statics.actualizarProducto = async function(id,dataUpdate) {
     try {
+        const newDataProduct = await this.findOneUpdate(
+            {Id_Producto: id},
+            dataUpdate,
+            { new:true }
+        );
 
-
+        return newDataProduct;
     } catch(err) {
         console.log('error:', err);
     };
@@ -78,7 +53,7 @@ productSchema.statics.findProductCode = function(id) {
     return this.findOne({
         Id_Producto:id,
     });
-}
+};
 
 productSchema.statics.createInstance = async function(Id_Producto, Articulo, unidadMedida, precio, moneda) {
     try {
@@ -93,7 +68,11 @@ productSchema.statics.createInstance = async function(Id_Producto, Articulo, uni
         return await newProduct.save();
     } catch(err) {
         //console.log('error:', err);
-    }
+    };
+};
+
+productSchema.statics.add = async function(producto) {
+   await this.create(producto);
 };
 
 // Sintaxis que genera un modelo Asociado a ese esquema
@@ -101,29 +80,32 @@ const Producto = mongoose.model('Producto', productSchema);
 
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
-    //console.log('--------------Inicio de registro de Producto----------------');
-    try {
-        await Producto.createInstance(
-            '001-000001',     // Codigo 
-            'Blister Comino', // Nombre Articulo,
-            'gr',             // Unidad de Medida,
-            35.63,                // Precio,
-            //'Bs',              // moneda
-        );
 
+
+    // Objecto que contiene los datos del producto para pasar los datos por el metodo create
+    const producto_1 = {
+        Id_Producto:'001-000001',     // Codigo 
+        Articulo:'Blister Comino', // Nombre Articulo,
+        unidadMedida:'Gramo',           // Unidad de Medida,
+        precio:38.75,              // Precio,
+        //'Bs',            // moneda
+    };
+
+    // Metodo create funcionando correctamente.
+    await Producto.add(producto_1);
+
+    /*try {
         await Producto.createInstance(
             '002-000001',     // Codigo 
             'Blister Canela', // Nombre Articulo,
-            'Onza',             // Unidad de Medida,
-            2.5,                // Precio,
-            'USD',              // moneda
+            'Onza',           // Unidad de Medida,
+            2.5,              // Precio,
+            'USD',            // moneda
         );
-
-        //console.log('--------------ok de registro de Producto------------------------');
     } catch(err) {
         //console.log('error:', err);
-    };
-
+    };*/
+    
     // Metodo correcto para cerrar la conexion de la base de datos
     mongoose.connection.close();
 });

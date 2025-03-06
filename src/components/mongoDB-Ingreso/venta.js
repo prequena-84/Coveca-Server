@@ -1,18 +1,14 @@
-const Inventario = require('./inventario');
-const Producto = require('./producto');
-const { validateQuantity } = require('../../../dist/function/FN-ventas.js');
+require('dotenv').config({ path: '../../.env' }); // Ajusta la ruta según la ubicación de tu .env
 const mongoose = require('mongoose');
-const uri = 'mongodb+srv://prequena:52ohHwBT7MaMy9p9@db-operaciones.ktjoy.mongodb.net/?retryWrites=true&w=majority&appName=DB-Operaciones';
-
-mongoose.connect(uri);
-
+mongoose.connect(process.env.DB_URI_MONGO);
 const db = mongoose.connection;
+const { Schema } = mongoose;
 
 //Asociar un error a la conexion
 db.on('error', () => {} );
 
 // Esquema Venta
-const salesSchema = new mongoose.Schema({
+const salesSchema = new Schema({
     Id_Factura:{ type: String, unique: true, required: true }, // Campo único
     Fecha:String,
     IdCliente:String,
@@ -25,6 +21,8 @@ const salesSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator:async function(v) { 
+                console.log( validateQuantity( await Inventario.quantityProduct(this.IdProducto)) );
+
                 return v <= validateQuantity( await Inventario.quantityProduct(this.IdProducto) );
             },
             message: props => `La cantidad ingresada de ${props.value} no es valida para hacer la factura porque no hay esta cantidad de productos en el inventario`,
@@ -97,29 +95,32 @@ salesSchema.statics.createInstance = async function(
     return newSale.save();
 };
 
+clientSchema.statics.add = async function(dataSell) {
+    try {
+        await this.create(dataSell);
+    } catch (err) {
+        console.log('Error en ventas:', err);
+    };
+};
+
 // Asociacion del modelo de Venta
 const Venta = mongoose.model ('Venta', salesSchema);
 
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
-
-    console.log('--------------Inicio de regsitro de Venta #1----------------');
-    try {
-        await Venta.createInstance(
-            '001-000001',     // Id_Factura 
-            '31/12/2024',     // Fecha
-            '1',              // Id_Cliente
-            'PR-01',          // Id_Vendedor
-            '001-000001',     // Id_Producto
-            '000001',         // Lote
-            true,             // exceptoIVA
-            15,               // Cantidad
-        );
-        console.log('--------------Registro de Venta ok------------------------');
-    } catch(err) {
-        /*console.log('--------------Error en el registro de Venta 1----------------');
-        console.log(err);*/
+    const ventas_1 = {
+        Id_Factura:'001-000002',
+        Fecha:'31/12/2024',
+        IdCliente:'1',
+        IdVendedor:'YG-01',
+        IdProducto:'002-000001',
+        IdLote:'000002',
+        exceptoIVA:true,
+        Cantidad:55,
     };
+
+    await Venta.add(ventas_1);
+    console.log('--------------Registro de Venta #1------------------------');
 
     // Metodo correcto para cerrar la conexion de la base de datos
     await mongoose.connection.close();

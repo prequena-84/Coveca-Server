@@ -1,10 +1,10 @@
-const Ventas = require('../mongoDB-query/venta');
+require('dotenv').config({ path: '../../.env' }); // Ajusta la ruta según la ubicación de tu .env
 const mongoose = require('mongoose');
-const uri = 'mongodb+srv://prequena:52ohHwBT7MaMy9p9@db-operaciones.ktjoy.mongodb.net/?retryWrites=true&w=majority&appName=DB-Operaciones';
-
-mongoose.connect(uri);
-
+mongoose.connect(process.env.DB_URI_MONGO);
 const db = mongoose.connection;
+const Ventas = require('../mongoDB-Ingreso/venta');
+const mongoose = require('mongoose');
+
 
 db.on('error', () => {} );
 

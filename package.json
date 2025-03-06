@@ -19,6 +19,7 @@
   "dependencies": {
     "@types/mongoose": "^5.11.97",
     "coveca-server": "file:",
+    "dotenv": "^16.4.7",
     "mongoose": "^8.10.2",
     "typescript": "^5.7.3"
   }

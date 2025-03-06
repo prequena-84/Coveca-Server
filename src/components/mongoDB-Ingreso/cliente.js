@@ -1,16 +1,15 @@
+require('dotenv').config({ path: '../../.env' }); // Ajusta la ruta según la ubicación de tu .env
 const mongoose = require('mongoose');
-const uri = 'mongodb+srv://prequena:52ohHwBT7MaMy9p9@db-operaciones.ktjoy.mongodb.net/?retryWrites=true&w=majority&appName=DB-Operaciones';
-
-mongoose.connect(uri);
-
+mongoose.connect(process.env.DB_URI_MONGO);
 const db = mongoose.connection;
+const { Schema } = mongoose;
 
 //Asociar un error a la conexion
 db.on('error', console.error.bind(console, '  error:'));
 
 // Sintasix que crea la clase Schema ya que en mongoose todo modelo deriba de una clase schema
-const clientSchema = new mongoose.Schema({
-    Id_Cliente:{ type: String, unique: true, required: true }, // Campo único
+const clientSchema = new Schema({
+    Id_Cliente:{ type: Number, unique: true, required: true }, // Campo único
     nombre:String,
     apellido:String,
     cedula: Number,
@@ -62,26 +61,33 @@ clientSchema.statics.createInstance = async function(Id_Cliente, nombre, apellid
     return await newClient.save();
 };
 
+clientSchema.statics.add = async function(dataClient) {
+    await this.create(dataClient);
+};
+
 // Sintaxis que genera un modelo Asociado a ese esquema
 const Cliente = mongoose.model('Cliente', clientSchema);
 
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
-    console.log('--------------Inicio de regsitro de cliente 1----------------');
-    try {
-        await Cliente.createInstance(
-            '2',                    // Id_Cliente 
-            'Yinet',                 // nombre
-            'Paredes',               // apellido
-            16589658,                // cedula
-            'V165896583',           // RIF
-            39,                     // edad
-            'Caracas',  // direccion
-            'yparedes@gmail.com', // mail
-            '+54-424-123-45-657',    // whastApp
-        );
+    console.log('--------------Inicio de regsitro de cliente ----------------');
 
-        console.log('--------------Registro de cliente 1------------------------');
+    const cliente = {
+        Id_Cliente:1,
+        nombre:'Tito',
+        apellido:'Guerra',
+        cedula: '16859785',
+        RIF:'V16859785',
+        edad:41,
+        direccion:'La Guaira',
+        mail:'titoguerra@gmail.com',
+        whastApp:'+54-424-123-45-657',
+    }
+
+    try {
+        await Cliente.add(cliente);
+
+        console.log('--------------Registro de cliente ------------------------');
     } catch(err) {
         console.log('error:', err);
     };

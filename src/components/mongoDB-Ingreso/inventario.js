@@ -1,16 +1,14 @@
-const Productos = require('./producto');
+require('dotenv').config({ path: '../../.env' }); // Ajusta la ruta según la ubicación de tu .env
 const mongoose = require('mongoose');
-const uri = 'mongodb+srv://prequena:52ohHwBT7MaMy9p9@db-operaciones.ktjoy.mongodb.net/?retryWrites=true&w=majority&appName=DB-Operaciones';
-
-mongoose.connect(uri);
-
+mongoose.connect(process.env.DB_URI_MONGO);
 const db = mongoose.connection;
+const { Schema } = mongoose;
 
 // Asociar un error a la conexion
 db.on('error', () => {} ); //console.error.bind(console, '  error:'));
 
 // Esquema Ventas
-const inventorySchema = new mongoose.Schema({
+const inventorySchema = new Schema({
     Id_Lote:{ type: String, unique: true, required: true }, // Campo único
     IdProducto:String,
     IdVendedor: String,
@@ -82,24 +80,28 @@ inventorySchema.statics.createInstance = async function(
     }
 };
 
+inventorySchema.statics.add = async function(dataInventory) {
+    await this.create(dataInventory);
+};
+
 // Asociacion del modelo de ventas
 const Inventario = mongoose.model ('Inventario', inventorySchema);
 
 // abrir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
-   
-    console.log('--------------Inicio de registro de inventario 3----------------');
-    try {
-        await Inventario.createInstance(
-            '000003',     // Id_Lote       
-            '001-000001', // Id_Productos
-            'PR-01',      // Id_Vendedor
-            '01/07/2025', // fechaElaboracion
-            '01/12/2025', // fechaVencimiento
-            75,           // stock
-        );
 
-        //console.log('--------------Registro de inventario ok 3------------------------');
+    const inventory = {
+        Id_Lote:'000003',
+        IdProducto:'001-000001',
+        IdVendedor:'PR-01',
+        fechaElaboracion:'01/07/2025',
+        fechaVencimiento:'01/12/2025',
+        stock:700,
+    }
+   
+    console.log('--------------Inicio de registro de inventario ----------------');
+    try {
+        await Inventario.add(inventory);
     } catch(err) {
        //console.log('error inventario 3', err);
     };
