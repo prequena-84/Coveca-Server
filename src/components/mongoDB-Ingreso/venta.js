@@ -102,7 +102,7 @@ const Venta = model ('Venta', salesSchema);
 
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
-    await addSells('001-000002','31/01/2024', '1', 'PR-01', '001-000001', '000001', true, 55);
+    await addSells('001-000003','02/05/2024', '1', 'YK-01', '002-000001', '000002', true, 70);
    
     // Metodo correcto para cerrar la conexion de la base de datos
     await mongoose.connection.close();
@@ -110,7 +110,6 @@ db.once('open', async () => {
 
 async function addSells(Id_Factura,Fecha,IdCliente,IdVendedor,IdProducto,IdLote,exceptoIVA,Cantidad) {
     try {
-        console.log(`-------------- Registro de Venta #${Id_Factura} ------------------------`);
         await Venta.createInstance(
             Id_Factura,
             Fecha,

@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_URI_MONGO);
 const db = mongoose.connection;
 const Ventas = require('../mongoDB-Ingreso/venta');
-const mongoose = require('mongoose');
 
 db.on('error', () => {} );
 

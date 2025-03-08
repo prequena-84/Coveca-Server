@@ -5,7 +5,7 @@ const db = mongoose.connection;
 const { Schema, model } = mongoose;
 
 //Asociar un error a la conexion
-db.on('error', console.error.bind(console, '  error:'));
+db.on('error', () =>{} );
 
 // Sintasix que crea la clase Schema ya que en mongoose todo modelo deriba de una clase schema
 const sellerSchema = new Schema({
@@ -51,7 +51,6 @@ sellerSchema.statics.createInstance = function(Id_Vendedor, nombre, apellido, ce
 
         return newSeller.save();
     } catch(err){
-        console.log(err);
     };
 };
 
@@ -69,7 +68,6 @@ db.once('open', async () => {
     mongoose.connection.close();
 
     async function addVendedor(Id_Vendedor, nombre, apellido, cedula, RIF, mail, whastApp) {
-        console.log(`--------------Inicio de regsitro de Vendedor ${ Id_Vendedor } ${ nombre +' '+apellido }  ----------------`);
         await Vendedor.createInstance(
             Id_Vendedor,
             nombre,

@@ -1,4 +1,11 @@
-const Producto = require('./producto');
+const Producto = require('../mongoDB-Ingreso/producto');
+
+UpdateProduct('002-000001', {
+    Articulo:'Blister Pimienta',
+    unidadMedida:'Kilos',
+    precio:3.5,
+    moneda:'Bs',
+});
 
 async function UpdateProduct(id, dataProduct) {
     try {
@@ -9,9 +16,6 @@ async function UpdateProduct(id, dataProduct) {
     };
 };
 
-UpdateProduct('002-000001', {
-    Articulo:'Blister Pimienta',
-    unidadMedida:'Kilos',
-    precio:3.5,
-    moneda:'Bs',
-});
+/**
+ * Funciono solo me queda quitar los console log, fusionar y luego crear los endpoint de peticion get o post
+ */

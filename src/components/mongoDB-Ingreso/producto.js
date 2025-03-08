@@ -5,7 +5,7 @@ const db = mongoose.connection;
 const { Schema, model } = mongoose;
 
 //Asociar un error a la conexion
-db.on('error', () => {});//console.error.bind(console, '  error:'));
+db.on('error', () => {});
 
 // Sintasix que crea la clase Schema ya que en mongoose todo modelo deriba de una clase schema
 const productSchema = new Schema({
@@ -16,16 +16,10 @@ const productSchema = new Schema({
     moneda:{ type: String, default: 'Bs' },
 });
 
-/*
-    Quede en hacer un metodo para actualizar del producto asi para cambiar el precio, nombre, cantidad, moneda, etc, etc.
-    luego de esto crear un metodo para modificar el inventario por si hay un error en el registro del inventario y evitar de volver a
-    cargar los datos.
- */
-
 // Metodo para actualizar los datos,
 productSchema.statics.actualizarProducto = async function(id, dataUpdate) {
     try {
-        const newDataProduct = await this.findOneUpdate(
+        const newDataProduct = await this.findOneAndUpdate(
             {Id_Producto: id},
             dataUpdate,
             { new:true }
@@ -33,7 +27,6 @@ productSchema.statics.actualizarProducto = async function(id, dataUpdate) {
 
         return newDataProduct;
     } catch(err) {
-        console.log('error:', err);
     };
 };
 
@@ -67,7 +60,6 @@ productSchema.statics.createInstance = async function(Id_Producto, Articulo, uni
 
         return await newProduct.save();
     } catch(err) {
-        //console.log('error:', err);
     };
 };
 
@@ -85,7 +77,6 @@ db.once('open', async () => {
 
 async function addProduct(Id_Producto,Articulo,unidadMedida,precio,moneda) {
     try {
-        //console.log(`------------ Registro Producto ${Id_Producto} ------------------`);
         await Producto.createInstance(
             Id_Producto,
             Articulo,

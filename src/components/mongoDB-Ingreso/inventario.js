@@ -6,7 +6,7 @@ const { Schema, model } = mongoose;
 const Producto  = require('./producto');
 
 // Asociar un error a la conexion
-db.on('error', () => {} ); //console.error.bind(console, '  error:'));
+db.on('error', () => {} );
 
 // Esquema Ventas
 const inventorySchema = new Schema({
@@ -77,8 +77,7 @@ inventorySchema.statics.createInstance = async function(
         newInventory.moneda = itemProduct.moneda;
     
         return await newInventory.save();
-    } catch(undefined) {
-        //console.log(`error en instancia: por favor intente nuevamente re realizar el registro del lote #${Id_Lote}`);
+    } catch(err) {
     };
 };
 
@@ -87,16 +86,15 @@ const Inventario = model('Inventario', inventorySchema);
 
 // abrir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
-    await addInventory('000001', '001-000001', 'PR-01', '01/07/2025', '01/12/2025', 700);
-    await addInventory('000002', '002-000001', 'YZ-01', '01/07/2025', '01/12/2025', 350);
-    await addInventory('000003', '001-000001', 'YG-01', '01/07/2025', '01/12/2025', 900);
+    await addInventory('000004', '002-000001', 'YK-01', '03/01/2025', '07/25/2025', 650);
+    //await addInventory('000002', '002-000001', 'YZ-01', '01/07/2025', '01/12/2025', 350);
+    //await addInventory('000003', '001-000001', 'YG-01', '01/07/2025', '01/12/2025', 900);
 
     // Metodo correcto para cerrar la conexion de la base de datos
     mongoose.connection.close();
 
     async function addInventory(Id_Lote,IdProducto,IdVendedor,fechaElaboracion,fechaVencimiento,stock) { 
         try {
-            //console.log(`--------------Inicio de registro de inventario nro. lote ${Id_Lote}----------------`);
             await Inventario.createInstance( 
                 Id_Lote,
                 IdProducto,
@@ -106,7 +104,6 @@ db.once('open', async () => {
                 stock,
             );
         } catch(err) {
-           //console.log('error inventario', err);
         };
     };
 });

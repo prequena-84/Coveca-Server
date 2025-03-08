@@ -5,7 +5,7 @@ const db = mongoose.connection;
 const { Schema, model } = mongoose;
 
 //Asociar un error a la conexion
-db.on('error', console.error.bind(console, '  error:'));
+db.on('error', () => {} );
 
 // Sintasix que crea la clase Schema ya que en mongoose todo modelo deriba de una clase schema
 const clientSchema = new Schema({
@@ -23,7 +23,6 @@ const clientSchema = new Schema({
 // Para agregar un metodo al esquema
 clientSchema.methods.saludar = function() {
     const saludo =this.nombre ? "mi nombre es " + this.nombre : "hola no tengo nombre";
-    console.log(saludo);
 };
 
 // Mostrar todos los clientes sin filtros
@@ -85,7 +84,6 @@ clientSchema.statics.add = async function(
             whastApp,
         });
     } catch(err) {
-        console.log('error:', err);
     };
 };
 
@@ -95,7 +93,7 @@ const Cliente = model('Cliente', clientSchema);
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
 
-    console.log('--------------Registro de cliente #1 ------------------------');
+    // Pendiente Crear Función para el registro de clientes
     await Cliente.add(
         '1',         //Id_Cliente
         'Tito',      //nombre
