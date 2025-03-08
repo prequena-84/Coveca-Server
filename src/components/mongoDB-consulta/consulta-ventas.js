@@ -5,7 +5,6 @@ const db = mongoose.connection;
 const Ventas = require('../mongoDB-Ingreso/venta');
 const mongoose = require('mongoose');
 
-
 db.on('error', () => {} );
 
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.

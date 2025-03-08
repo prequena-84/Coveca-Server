@@ -2,14 +2,14 @@ require('dotenv').config({ path: '../../.env' }); // Ajusta la ruta según la ub
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_URI_MONGO);
 const db = mongoose.connection;
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
 
 //Asociar un error a la conexion
 db.on('error', console.error.bind(console, '  error:'));
 
 // Sintasix que crea la clase Schema ya que en mongoose todo modelo deriba de una clase schema
 const clientSchema = new Schema({
-    Id_Cliente:{ type: Number, unique: true, required: true }, // Campo único
+    Id_Cliente:{ type: String, unique: true, required: true }, // Campo único
     nombre:String,
     apellido:String,
     cedula: Number,
@@ -61,37 +61,52 @@ clientSchema.statics.createInstance = async function(Id_Cliente, nombre, apellid
     return await newClient.save();
 };
 
-clientSchema.statics.add = async function(dataClient) {
-    await this.create(dataClient);
-};
-
-// Sintaxis que genera un modelo Asociado a ese esquema
-const Cliente = mongoose.model('Cliente', clientSchema);
-
-// abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
-db.once('open', async () => {
-    console.log('--------------Inicio de regsitro de cliente ----------------');
-
-    const cliente = {
-        Id_Cliente:1,
-        nombre:'Tito',
-        apellido:'Guerra',
-        cedula: '16859785',
-        RIF:'V16859785',
-        edad:41,
-        direccion:'La Guaira',
-        mail:'titoguerra@gmail.com',
-        whastApp:'+54-424-123-45-657',
-    }
-
+clientSchema.statics.add = async function(
+    Id_Cliente, 
+    nombre, 
+    apellido, 
+    cedula, 
+    RIF, 
+    edad, 
+    direccion, 
+    mail, 
+    whastApp,
+) {
     try {
-        await Cliente.add(cliente);
-
-        console.log('--------------Registro de cliente ------------------------');
+        await this.create({
+            Id_Cliente,
+            nombre,
+            apellido,
+            cedula,
+            RIF,
+            edad,
+            direccion,
+            mail,
+            whastApp,
+        });
     } catch(err) {
         console.log('error:', err);
     };
+};
 
+// Sintaxis que genera un modelo Asociado a ese esquema
+const Cliente = model('Cliente', clientSchema);
+
+// abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
+db.once('open', async () => {
+
+    console.log('--------------Registro de cliente #1 ------------------------');
+    await Cliente.add(
+        '1',         //Id_Cliente
+        'Tito',      //nombre
+        'Guerra',    // apellido
+        16859785,    //cedula
+        'V16859785', //RIF
+        41,          // edad
+        'La Guaira', // direccion
+        'titoguerra@gmail.com', // mail
+        '+54-424-123-45-657',   // whastApp
+    );
     // Metodo correcto para cerrar la conexion de la base de datos
     mongoose.connection.close();
 });

@@ -1,15 +1,14 @@
+require('dotenv').config({ path: '../../.env' }); // Ajusta la ruta según la ubicación de tu .env
 const mongoose = require('mongoose');
-const uri = 'mongodb+srv://prequena:52ohHwBT7MaMy9p9@db-operaciones.ktjoy.mongodb.net/?retryWrites=true&w=majority&appName=DB-Operaciones';
-
-mongoose.connect(uri);
-
+mongoose.connect(process.env.DB_URI_MONGO);
 const db = mongoose.connection;
+const { Schema, model } = mongoose;
 
 //Asociar un error a la conexion
 db.on('error', console.error.bind(console, '  error:'));
 
 // Sintasix que crea la clase Schema ya que en mongoose todo modelo deriba de una clase schema
-const sellerSchema = new mongoose.Schema({
+const sellerSchema = new Schema({
     Id_Vendedor:{ type: String, unique: true, required: true }, // Campo único
     nombre:String,
     apellido:String,
@@ -39,92 +38,46 @@ sellerSchema.statics.findSellerCode = function(id) {
 };
 
 sellerSchema.statics.createInstance = function(Id_Vendedor, nombre, apellido, cedula, RIF, mail, whastApp) {
-    const newSeller = new this({
-        Id_Vendedor, 
-        nombre,
-        apellido,
-        cedula,
-        RIF,
-        mail,
-        whastApp,
-    });
+    try {
+        const newSeller = new this({
+            Id_Vendedor, 
+            nombre,
+            apellido,
+            cedula,
+            RIF,
+            mail,
+            whastApp,
+        });
 
-    return newSeller.save();
+        return newSeller.save();
+    } catch(err){
+        console.log(err);
+    };
 };
 
 // Sintaxis que genera un modelo Asociado a ese esquema
-const Vendedor = mongoose.model('Vendedor', sellerSchema);
+const Vendedor = model('Vendedor', sellerSchema);
 
 // abir la conexion. dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
 db.once('open', async () => {
-    console.log('--------------Inicio de regsitro de Vendedor----------------');
-    try {
-        await Vendedor.createInstance(
-            'YK-01',                           // Id_Vendedor 
-            'Karina',                          // nombre
-            'Guerra',                        // apellido
-            17387775,                         // cedula
-            'V17387756',                     // RIF
-            'yormaty@gmail.com', // mail
-            '+54-424-123-45-67',              // whastApp
-        );
 
-        console.log('--------------ok registro de Vendedor------------------------');
-    } catch(err) {
-        console.log('error:', err);
-    };
-
-    console.log('--------------Inicio de regsitro de Vendedor----------------');
-    try {
-        await Vendedor.createInstance(
-            'YG-01',                           // Id_Vendedor 
-            'Karina',                          // nombre
-            'Guerra',                        // apellido
-            17387775,                         // cedula
-            'V17387756',                     // RIF
-            'yormaty@gmail.com', // mail
-            '+54-424-123-45-67',              // whastApp
-        );
-
-        console.log('--------------ok registro de Vendedor------------------------');
-    } catch(err) {
-        console.log('error:', err);
-    };
-
-    console.log('--------------Inicio de regsitro de Vendedor 2----------------');
-    try {
-        await Vendedor.createInstance(
-            'PR-01',                           // Id_Vendedor 
-            'Pedro',                          // nombre
-            'REquena',                        // apellido
-            17477617,                         // cedula
-            'V174776176',                     // RIF
-            'pedrorequenarondon@hotmail.com', // mail
-            '+54-424-177-20-59',              // whastApp
-        );
-
-        console.log('--------------ok registro de Vendedor 2------------------------');
-    } catch(err) {
-        console.log('error:', err);
-    };
-
-    console.log('--------------Inicio de regsitro de Vendedor 3----------------');
-    try {
-        await Vendedor.createInstance(
-            'YZ-01',                           // Id_Vendedor 
-            'Yubi',                          // nombre
-            'Guerra',                        // apellido
-            19658712,                         // cedula
-            'V196587120',                     // RIF
-            'yurbelisguerra@hotmail.com', // mail
-            '+54-424-188-60-33',              // whastApp
-        );
-
-        console.log('--------------ok registro de Vendedor 3------------------------');
-    } catch(err) {
-        console.log('error:', err);
-    };
+    await addVendedor('YK-01', 'Karina', 'Guerra', 17387775, 'V17387756', 'yormaty@gmail.com','+54-424-123-45-67');
+    await addVendedor('YG-01', 'Yuberlis', 'Guerra', 19658712, 'V196587126', 'yubi@gmail.com','+54-424-123-45-67');
+    await addVendedor('PR-01', 'Pedro', 'Guerra', 17477617, 'V17477617', 'pedro@gmail.com','+54-424-177-20-59');
 
     // Metodo correcto para cerrar la conexion de la base de datos
     mongoose.connection.close();
+
+    async function addVendedor(Id_Vendedor, nombre, apellido, cedula, RIF, mail, whastApp) {
+        console.log(`--------------Inicio de regsitro de Vendedor ${ Id_Vendedor } ${ nombre +' '+apellido }  ----------------`);
+        await Vendedor.createInstance(
+            Id_Vendedor,
+            nombre,
+            apellido,
+            cedula,
+            RIF,
+            mail,
+            whastApp,
+        );
+    };
 });
