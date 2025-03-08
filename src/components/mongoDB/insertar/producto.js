@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '../../.env' }); // Ajusta la ruta según la ubicación de tu .env
+require('dotenv').config({ path: '../../../../.env' }); // Ajusta la ruta según la ubicación de tu .env
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_URI_MONGO);
 const db = mongoose.connection;
