@@ -1,15 +1,16 @@
-require('dotenv').config({ path: '../.env' });
-//const mongoose = require('mongoose');
-const uriMongo = process.env.DB_URI_MONGO; //`"${process.env.DB_URI_MONGO}"`;
+const mongoose = require('mongoose');
+const path = require('path');
 
-//console.log(uriMongo);
+require('dotenv').config({ path: path.resolve(__dirname,'../../../../.env') });
+const uriMongoDB = `mongodb+srv://${process.env.USER_MONGODB}:${process.env.KEY_MONGODB}${process.env.URI_MONGO}${process.env.CLOUSTER_OPERATIONS}`;
 
-/*mongoose.connect(uriMongo);
+mongoose.connect(uriMongoDB);
 const db = mongoose.connection;
-const { Schema } = mongoose;*/
+const { Schema, model } = mongoose;
 
 module.exports = { 
-    //mongoose,
-    //db, 
-    //Schema, 
+    mongoose,
+    db, 
+    Schema, 
+    model,
 };
