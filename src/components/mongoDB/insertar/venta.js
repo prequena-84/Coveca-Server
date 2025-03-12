@@ -1,5 +1,5 @@
 require('dotenv').config({ path: '../../.env' }); // Ajusta la ruta según la ubicación de tu .env
-const { validateQuantity } = require('../../../../dist/function/FN-ventas.js');
+const { validateQuantity } = require('../../../../dist/function/ventas-mongoDB.js');
 const Inventario = require('./Inventario.js');
 const Producto = require('./producto.js');
 const mongoose = require('mongoose');

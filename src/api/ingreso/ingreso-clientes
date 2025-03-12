@@ -16,4 +16,9 @@ router.get("/", (req,res) => {
     };
 });
 
+// Metodo para registro de cliente
+router.post("/registrationClient",  (req, res) => {
+    
+})
+
 module.exports = router;
