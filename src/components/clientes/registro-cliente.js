@@ -19,6 +19,7 @@ const ClientAdd = async (
     contraseña,
 ) => {
     try {
+
         // Abrir la conexion a la BD
         await connectDB();
 
@@ -35,12 +36,14 @@ const ClientAdd = async (
             whastApp,
             usuario,
             contraseña
-        );
-        
-        mongoose.connect.close();
+        ); 
     } catch (err) {
-        console.error('error en insertar un cliente', err);
-    }
+
+        console.error('error en insertar un cliente: ', err);
+    } finally {
+
+        mongoose.connection.close();
+    };
 };
 
 module.exports = {

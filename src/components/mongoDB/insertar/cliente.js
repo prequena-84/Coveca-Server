@@ -1,4 +1,4 @@
-const { Schema, model } = mongoose;
+const { Schema, model } = require('mongoose');
 
 // Importación de encriptador de contraseñas de usuarios
 const bcrypt = require('bcrypt');
@@ -20,10 +20,12 @@ const clientSchema = new Schema({
 
 // Metodo para guardar la Encriptación de la clave
 clientSchema.pre('save', async function(next) {
-    if ( !this.idModified('contraseña') ) return next;
+    if (!this.isModified('contraseña')) return next();
 
     const salt = await bcrypt.genSalt(10);
-    this.password = bcrypt.hash(this.password, salt);
+    this.contraseña = await bcrypt.hash(this.contraseña, salt);
+
+    console.log('contraseña: ', this.contraseña);
     next();
 });
 
@@ -62,44 +64,30 @@ clientSchema.statics.findClientCode = async function(id) {
 };
 
 clientSchema.statics.createInstance = async function(Id_Cliente, nombre, apellido, cedula, RIF, edad, direccion, mail, whastApp,usuario,contraseña) {
-    const newClient = new this({
-        Id_Cliente, 
-        nombre,
-        apellido,
-        cedula,
-        RIF,
-        edad,
-        direccion,
-        mail,
-        whastApp,
-        usuario,
-        contraseña,
-    });
+    try {
 
-    return await newClient.save();
+        const newClient = new this({
+            Id_Cliente, 
+            nombre,
+            apellido,
+            cedula,
+            RIF,
+            edad,
+            direccion,
+            mail,
+            whastApp,
+            usuario,
+            contraseña,
+        });
+
+        console.log('seregistro el cliente sastifactoriamente')
+        return await newClient.save();
+    } catch(err) {
+
+        console.log('error en registro de cliewnte: '. err);
+    }
 };
 
 // Sintaxis que genera un modelo Asociado a ese esquema
 const Cliente = model('Cliente', clientSchema);
 module.exports = Cliente;
-
-/* Abrir la conexión dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
-    db.once('open', async () => {
-
-    // Pendiente Crear Función para el registro de clientes
-    await Cliente.createInstance(
-        '1',         //Id_Cliente
-        'Tito',      //nombre
-        'Guerra',    // apellido
-        16859785,    //cedula
-        'V16859785', //RIF
-        41,          // edad
-        'La Guaira', // direccion
-        'titoguerra@gmail.com', // mail
-        '+54-424-123-45-657',   // whastApp
-        'TTGuerra',             // UserName
-        '1234',                 // PassWord
-    );
-    // Metodo correcto para cerrar la conexion de la base de datos
-    mongoose.connection.close();
-});*/

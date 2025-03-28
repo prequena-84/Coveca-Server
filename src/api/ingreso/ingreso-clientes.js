@@ -7,7 +7,7 @@ const { ClientAdd } = require('../../components/clientes/registro-cliente');
 
 router.get("/", async (req,res) => {
     try{
-        ClientAdd(
+        /*ClientAdd(
             '1',         //Id_Cliente
             'Tito',      //nombre
             'Guerra',    // apellido
@@ -18,8 +18,22 @@ router.get("/", async (req,res) => {
             'titoguerra@gmail.com', // mail
             '+54-424-123-45-657',   // whastApp
             'TTGuerra',             // UserName
-            '1234',                 // PassWord
-        )
+            'Tg1234*27',                 // PassWord
+        );*/
+
+        ClientAdd(
+            '2',         //Id_Cliente
+            'Antonio',      //nombre
+            'Gutierrez',    // apellido
+            18569859,    //cedula
+            'V1185698590', //RIF
+            38,          // edad
+            'Caracas', // direccion
+            'agutierrez@hotmail.com', // mail
+            '+54-424-123-45-657',   // whastApp
+            'AGutierrez',             // UserName
+            '278*gfñ78',                 // PassWord
+        );
 
         res.status(200).send({
             mensaje:'Api de servicio para registro de clientes'
