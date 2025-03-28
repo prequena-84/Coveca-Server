@@ -1,15 +1,7 @@
-require('dotenv').config({ path: '../../.env' }); // Ajusta la ruta según la ubicación de tu .env
+const { Schema, model } = mongoose;
 
 // Importación de encriptador de contraseñas de usuarios
 const bcrypt = require('bcrypt');
-
-const mongoose = require('mongoose');
-mongoose.connect(process.env.DB_URI_MONGO);
-const db = mongoose.connection;
-const { Schema, model } = mongoose;
-
-//Asociar un error a la conexion
-db.on('error', () => {} );
 
 // Sintasix que crea la clase Schema ya que en mongoose todo modelo deriba de una clase schema
 const clientSchema = new Schema({
@@ -27,11 +19,11 @@ const clientSchema = new Schema({
 });
 
 // Metodo para guardar la Encriptación de la clave
-clientSchema.pre('save', async (next) => {
+clientSchema.pre('save', async function(next) {
     if ( !this.idModified('contraseña') ) return next;
 
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash( this.password, salt);
+    this.password = bcrypt.hash(this.password, salt);
     next();
 });
 
@@ -46,6 +38,7 @@ clientSchema.statics.updateDataClient = async function(userName, dataUpdate) {
 
         return newDataClient;
     } catch(err) {
+        console.error(err);
     };
 };
 
@@ -88,9 +81,10 @@ clientSchema.statics.createInstance = async function(Id_Cliente, nombre, apellid
 
 // Sintaxis que genera un modelo Asociado a ese esquema
 const Cliente = model('Cliente', clientSchema);
+module.exports = Cliente;
 
-// Abrir la conexión dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
-/*db.once('open', async () => {
+/* Abrir la conexión dentro de la conexion se deben aplicar los distintos comandos que le vamos aplicar a la tabla.
+    db.once('open', async () => {
 
     // Pendiente Crear Función para el registro de clientes
     await Cliente.createInstance(
@@ -109,5 +103,3 @@ const Cliente = model('Cliente', clientSchema);
     // Metodo correcto para cerrar la conexion de la base de datos
     mongoose.connection.close();
 });*/
-
-module.exports = Cliente;

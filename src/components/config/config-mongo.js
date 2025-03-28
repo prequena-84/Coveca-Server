@@ -1,0 +1,21 @@
+// Archivo para la conexión modular de mongoose
+require('dotenv').config({ path: path.resolve(__dirname,'../../../../.env') });
+
+const mongoose = require('mongoose');
+const path = require('path');
+const uriMongoDB = `mongodb+srv://${process.env.USER_MONGODB}:${process.env.KEY_MONGODB}${process.env.URI_MONGO}${process.env.CLOUSTER_OPERATIONS}`;
+
+const connectDB = async () => {
+   try {
+      await mongoose.connect(uriMongoDB);
+      console.log('conexion a mongo');
+   } catch(err) {
+      console.log('Error al intentar de conectarse a Mongoose: ', err );
+      process.exit(1); // Salir del proceso en caso de error
+   };
+};
+
+module.exports = {
+   mongoose,
+   connectDB,
+};
