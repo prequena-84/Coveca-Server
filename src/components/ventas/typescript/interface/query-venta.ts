@@ -1,8 +1,8 @@
 // Importación de Tiposde mongoose
-import type { Types } from 'mongoose';
+import type { Types } from 'mongoose'
 
 // Tipo de cantidad de ventas
-type saleQuantity = number | 0;
+type saleQuantity = number | 0
 
 // Interface de Productos
 interface IProduct {
@@ -23,4 +23,4 @@ interface IProduct {
 export {
     saleQuantity,
     IProduct,
-};
+}

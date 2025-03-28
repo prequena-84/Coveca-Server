@@ -63,8 +63,21 @@ clientSchema.statics.findClientCode = async function(id) {
     });
 };
 
-clientSchema.statics.createInstance = async function(Id_Cliente, nombre, apellido, cedula, RIF, edad, direccion, mail, whastApp,usuario,contraseña) {
+clientSchema.statics.createInstance = async function(dataClient) {
     try {
+        const [
+            Id_Cliente, 
+            nombre,
+            apellido,
+            cedula,
+            RIF,
+            edad,
+            direccion,
+            mail,
+            whastApp,
+            usuario,
+            contraseña,
+        ] = dataClient;
 
         const newClient = new this({
             Id_Cliente, 
@@ -79,14 +92,13 @@ clientSchema.statics.createInstance = async function(Id_Cliente, nombre, apellid
             usuario,
             contraseña,
         });
-
-        console.log('seregistro el cliente sastifactoriamente')
+        
         return await newClient.save();
     } catch(err) {
-
         console.log('error en registro de cliewnte: '. err);
-    }
+    };
 };
+
 
 // Sintaxis que genera un modelo Asociado a ese esquema
 const Cliente = model('Cliente', clientSchema);

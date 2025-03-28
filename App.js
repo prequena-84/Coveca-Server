@@ -2,7 +2,7 @@ const express = require('express');
 const servidor = express();
 const cors = require('cors');
 const { PORT } = require('./config-app');
-const CUSTOMER_REGISTRATION = require('./src/api/ingreso/ingreso-clientes');
+const CUSTOMER_REGISTRATION = require('./src/api/insert/insert-client');
 
 servidor.use(cors());
 
