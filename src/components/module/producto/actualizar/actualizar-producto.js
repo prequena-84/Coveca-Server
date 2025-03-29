@@ -1,4 +1,4 @@
-const Producto = require('../insertar/producto');
+const Producto = require('../../../mongoDB/model/producto');
 
 UpdateProduct('002-000001', {
     Articulo:'Blister Pimienta',

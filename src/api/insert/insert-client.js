@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const bodyParse = require('body-parser');
-const ClientAdd = require('../../components/clientes/registro-cliente');
+const ClientAdd = require('../../components/mongoDB/model/cliente');
 
 router.use(bodyParse.json());
 
 router.get("/", async (req,res) => {
     try{
-        const dataClient = [
+        /*const dataClient = [
             '1',                    // Id_Cliente
             'Tito',                 // Nombre
             'Guerra',               // Apellido
@@ -21,10 +21,10 @@ router.get("/", async (req,res) => {
             'Tg1234*27',            // PassWord
         ];
 
-        await ClientAdd(dataClient);
+        await ClientAdd(dataClient);*/
 
         res.status(200).send({
-            mensaje:'Api de servicio para registro de clientes'
+            mensaje:'Api de servicio de operacion de clientes',
         });
     } catch(err) {
         res.status(500).send({
@@ -36,10 +36,26 @@ router.get("/", async (req,res) => {
 // Metodo para registro de cliente
 router.post("/cliente-registro", async (req, res) => {
     try {
-        const data = req.body;
-        //console.log(data);
+        const 
+            data = req.body,
+            dataClient = [
+                data.IdClient, // Id_Cliente
+                data.Name,     // Nombre
+                data.lastNAme, // Apellido
+                data.IdDoc,    // Cedula
+                data.IdRif,    // RIF
+                data.Age,      // Edad
+                data.Address,  // direccion
+                data.Email,    // Mail
+                data.WhastApp, // WhastApp  
+                data.UserName, // UserName
+                data.PassWord, // PassWord
+            ],
+            RegCliente = await ClientAdd(dataClient)
+        ;
 
-        await ClientAdd(data);
+        console.log(RegCliente);
+
         res.status(200).json({
             mensaje:'Se resgistro el cliente sastifactoriamente',
             recibido: data,
