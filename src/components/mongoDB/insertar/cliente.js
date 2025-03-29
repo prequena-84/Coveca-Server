@@ -65,6 +65,9 @@ clientSchema.statics.findClientCode = async function(id) {
 
 clientSchema.statics.createInstance = async function(dataClient) {
     try {
+
+        console.log('revision de objecto: ', dataClient)
+
         const [
             Id_Cliente, 
             nombre,
@@ -77,7 +80,9 @@ clientSchema.statics.createInstance = async function(dataClient) {
             whastApp,
             usuario,
             contraseña,
-        ] = dataClient;
+         ] = dataClient;
+
+         console.log(nombre)
 
         const newClient = new this({
             Id_Cliente, 
@@ -95,7 +100,7 @@ clientSchema.statics.createInstance = async function(dataClient) {
         
         return await newClient.save();
     } catch(err) {
-        console.log('error en registro de cliewnte: '. err);
+        console.log('error en registro de cliente: '. err);
     };
 };
 

@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const bodyParse = require('body-parser');
-const { ClientAdd } = require('../../../dist/clientes/typescript/module/insert-client.js');
+const ClientAdd = require('../../components/clientes/registro-cliente');
 
 router.use(bodyParse.json());
 
 router.get("/", async (req,res) => {
     try{
-
         const dataClient = [
             '1',                    // Id_Cliente
             'Tito',                 // Nombre
@@ -22,14 +21,14 @@ router.get("/", async (req,res) => {
             'Tg1234*27',            // PassWord
         ];
 
-        await ClientAdd(dataClient)
+        await ClientAdd(dataClient);
 
         res.status(200).send({
             mensaje:'Api de servicio para registro de clientes'
         });
     } catch(err) {
         res.status(500).send({
-            mensaje:`err: ${err}`,
+            mensaje:`error en la peticion: ${err}`,
         });
     };
 });
