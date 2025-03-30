@@ -1,8 +1,8 @@
 // Importación de la conexion
-const { connectDB, mongoose } = require('../../config/config-mongo');
+const { connectDB, mongoose } = require('../../../config/config-mongo');
 
 // Importación del modelo cliente
-const Cliente = require('../../mongoDB/model/cliente');
+const Cliente = require('../../../mongoDB/model/cliente');
 
 // Metodo para Ingresar el cliente
 const ClientAdd = async (dataClient) => {
@@ -16,9 +16,11 @@ const ClientAdd = async (dataClient) => {
     } catch (err) {
 
         console.error('error en insertar un cliente: ', err);
+        return `Hubo un Error en el registro del cliente: ${err}`;
     } finally {
         
         mongoose.connection.close();
+        return 'Se registro el Cliente Sastifactoriamente';
     };
 };
 

@@ -104,7 +104,6 @@ clientSchema.statics.createInstance = async function(dataClient) {
     };
 };
 
-
 // Sintaxis que genera un modelo Asociado a ese esquema
 const Cliente = model('Cliente', clientSchema);
 module.exports = Cliente;

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParse = require('body-parser');
-const ClientAdd = require('../../components/mongoDB/model/cliente');
+const ClientAdd = require('../../components/module/cliente/registrar/registro-cliente');
 
 router.use(bodyParse.json());
 
@@ -20,11 +20,10 @@ router.get("/", async (req,res) => {
             'TTGuerra',             // UserName
             'Tg1234*27',            // PassWord
         ];
-
-        await ClientAdd(dataClient);*/
+        const resClient = await ClientAdd(dataClient);*/
 
         res.status(200).send({
-            mensaje:'Api de servicio de operacion de clientes',
+            mensaje:'Servicio modulo de Clientes',
         });
     } catch(err) {
         res.status(500).send({
@@ -51,13 +50,11 @@ router.post("/cliente-registro", async (req, res) => {
                 data.UserName, // UserName
                 data.PassWord, // PassWord
             ],
-            RegCliente = await ClientAdd(dataClient)
+            respClient = await ClientAdd(dataClient)
         ;
 
-        console.log(RegCliente);
-
         res.status(200).json({
-            mensaje:'Se resgistro el cliente sastifactoriamente',
+            mensaje:respClient,
             recibido: data,
         });
 
