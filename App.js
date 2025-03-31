@@ -3,7 +3,7 @@ const servidor = express();
 const cors = require('cors');
 const { PORT } = require('./config-app');
 const CUSTOMER_REGISTRATION = require('./src/app/insert/router-insert-client');
-const CUSTOMRT_UPDATE = require('./src/app/modify/router-update-client');
+const CUSTOMRT_UPDATE = require('./src/app/update/router-update-client');
 
 servidor.use(cors());
 
