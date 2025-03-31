@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParse = require('body-parser');
-const updateClient = require('../../components/module/cliente/actualizar/update-client');
+const updateClient = require('../../components/module/actualizar/update-client');
 
 router.use(bodyParse.json());
 

@@ -1,5 +1,5 @@
-const { connectDB, mongoose } = require('../../../config/config-mongo');
-const Cliente = require('../../../mongoDB/model/cliente');
+const { connectDB, mongoose } = require('../../config/config-mongo');
+const Cliente = require('../../mongoDB/model/cliente');
 
 const updateClient = async(userName, dataClient) => {
     try{
