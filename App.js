@@ -15,7 +15,7 @@ servidor.all("/", (req, res) => {
 servidor.use("/api-customer-registration", CUSTOMER_REGISTRATION);
 servidor.use("/api-customer-update", CUSTOMRT_UPDATE);
 
-// Quede en incluir los servicios de consulta y eliminacion del modulo de clientes
+// Quede en incluir los servicios de consulta y eliminación del modulo de clientes
 
 servidor.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
