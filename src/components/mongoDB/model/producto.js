@@ -27,6 +27,7 @@ productSchema.statics.actualizarProducto = async function(id, dataUpdate) {
 
         return newDataProduct;
     } catch(err) {
+        return `Se presento el siguiente Error en la actualizacion de datos: ${err}`;
     };
 };
 

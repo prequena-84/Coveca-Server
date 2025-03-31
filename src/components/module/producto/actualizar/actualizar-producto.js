@@ -15,7 +15,3 @@ async function UpdateProduct(id, dataProduct) {
         console.log('error', err);
     };
 };
-
-/**
- * Funciono solo me queda quitar los console log (Listo), fusionar (P) y luego crear los endpoint de peticion get o post (P #2)
- */

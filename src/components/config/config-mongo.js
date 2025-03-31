@@ -7,7 +7,6 @@ const uriMongoDB = `mongodb+srv://${process.env.USER_MONGODB}:${process.env.KEY_
 
 const connectDB = async () => {
    try {
-      console.log(uriMongoDB);
       await mongoose.connect(uriMongoDB);
       console.log('conexion a mongo');
    } catch(err) {
@@ -20,5 +19,3 @@ module.exports = {
    mongoose,
    connectDB,
 };
-
-//const uri = "mongodb+srv://prequena:<db_password>@db-operaciones.ktjoy.mongodb.net/?retryWrites=true&w=majority&appName=DB-Operaciones";

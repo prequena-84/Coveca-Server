@@ -38,36 +38,40 @@ clientSchema.statics.updateDataClient = async function(userName, dataUpdate) {
             { new:true }
         );
 
-        return newDataClient;
+        return {
+            data:newDataClient,
+            mensaje:`Se actualizo los datos del cliente #${newDataClient.Id_Cliente} sastifactoriamente`,
+        };
     } catch(err) {
-        console.error(err);
+        return {
+            data:null,
+            mensaje:`Se presento el siguiente Error en la actualizacion de datos: ${err}`,
+        };
     };
 };
 
-// Mostrar todos los clientes sin filtros
+// Metodo para consultar todos los clientes sin filtros
 clientSchema.statics.allClient = async function() {
     return await this.find();
 };
 
-// Ejemplo de filtro de Clientes por Numero
+// Filtro de Clientes por Numero
 clientSchema.statics.findClientName = async function(nombre) {
     return await this.find({
         nombre:new RegExp(`^${ nombre.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&') }`)
     });
 };
 
-// Ejemplo de filtro de clientes por numero de ID
+// Filtro de clientes por numero de ID
 clientSchema.statics.findClientCode = async function(id) {
     return await this.find({
         Id_Cliente:new RegExp(`^${ id.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&') }`)
     });
 };
 
+// Creación de la Instancia de Registro de Clientes
 clientSchema.statics.createInstance = async function(dataClient) {
     try {
-
-        console.log('revision de objecto: ', dataClient)
-
         const [
             Id_Cliente, 
             nombre,
@@ -80,9 +84,7 @@ clientSchema.statics.createInstance = async function(dataClient) {
             whastApp,
             usuario,
             contraseña,
-         ] = dataClient;
-
-         console.log(nombre)
+        ] = dataClient;
 
         const newClient = new this({
             Id_Cliente, 
@@ -97,10 +99,18 @@ clientSchema.statics.createInstance = async function(dataClient) {
             usuario,
             contraseña,
         });
-        
-        return await newClient.save();
+       
+        await newClient.save();
+
+        return {
+            data:newClient,
+            mensaje:`Se registro el cliente #${newClient.Id_Cliente} sastifactoriamente`,
+        }
     } catch(err) {
-        console.log('error en registro de cliente: '. err);
+        return {
+            data:null,
+            mensaje:`Se presento el siguiente error al registrar al nuevo cliente: ${err} `,
+        }
     };
 };
 
