@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParse = require('body-parser');
-const ClientAdd = require('../../components/module/cliente/registrar/insert-client');
+const ClientAdd = require('../../components/module/insert/insert-client');
 
 router.use(bodyParse.json());
 

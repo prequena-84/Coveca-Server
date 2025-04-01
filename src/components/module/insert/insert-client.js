@@ -1,8 +1,8 @@
 // Importación de la conexion
-const { connectDB, mongoose } = require('../../../config/config-mongo');
+const { connectDB, mongoose } = require('../../../components/config/config-mongo');
 
 // Importación del modelo cliente
-const Cliente = require('../../../mongoDB/model/cliente');
+const Cliente = require('../../../components/mongoDB/model/cliente');
 
 // Metodo para Ingresar el cliente
 const ClientAdd = async (dataClient) => {
